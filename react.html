@@ -1,0 +1,72 @@
+
+import React, { useState, useEffect } from "react";
+
+const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    message: ""
+  });
+  const [error, setError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const email = "raihana.zahra.darya@example.com";//
+
+  useEffect(() => {
+    localStorage.setItem("contactForm", JSON.stringify({ ...formData, email }));
+  }, [formData]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.message) {
+      setError("Please fill all fields!");
+      return;
+    }
+    setError("");
+    setSubmitted(true);
+    setFormData({ name: "", message: "" });
+  };
+
+  return (
+    <div className="p-4 border rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-2">Contact Form</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name (Raihana, Zahra, Darya)"
+          value={formData.name}
+          onChange={handleChange}
+          className="p-2 border rounded"
+        />
+        <input
+          type="email"
+          value={email}
+          readOnly
+          className="p-2 border rounded bg-gray-200"
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          value={formData.message}
+          onChange={handleChange}
+          className="p-2 border rounded"
+        />
+        {error && <p className="text-red-500">{error}</p>}
+        {submitted && <p className="text-green-600">Message sent!</p>}
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default ContactForm;
+
